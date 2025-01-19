@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<link rel="icon" href="logo.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome</title>
+<style>
+  /* Overall body style */
+  body {
+    background: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Navigation bar style */
+  nav {
+    background-color: #121212;
+    padding-left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px; /* Adjusted height for nav bar */
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center; /* Center items vertically */
+    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+    z-index: 100;
+  }
+
+  nav a {
+    flex: 1;
+    text-align: center;
+    color: #00ffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: 'Fira Code', monospace; /* Computer science-inspired font */
+    font-weight: normal; /* Default weight */
+    padding: 10px 0; /* Adjusted padding for shorter nav bar */
+    background-color: #1e1e1e; /* Button background */
+    margin: 3px; /* Reduced spacing between buttons */
+    border-radius: 5%; /* More rounded corners for buttons */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    letter-spacing: 1.2px; /* Adds a more modern look */
+  }
+
+  nav a.active {
+    background: linear-gradient(135deg, #00ffff, #0077ff); /* Neon blue gradient for active page */
+    color: #121212; /* Contrasting text color */
+    font-weight: bold; /* Slightly bold for active link */
+    box-shadow: 0 2px 8px rgba(0, 255, 255, 0.5); /* Glowing effect for active state */
+  }
+
+  nav a:hover {
+    background: linear-gradient(135deg, #00ffff, #0077ff); /* Neon blue gradient on hover */
+    color: #121212; /* Contrasting text color */
+    transform: scale(1.05); /* Slight scaling effect */
+    box-shadow: 0 2px 8px rgba(0, 255, 255, 0.5); /* Glowing effect for hover */
+  }
+  /* Welcome Box Style */
+  .welcome-box {
+    margin-top: 100px; /* Space for navigation bar */
+    text-align: center;
+    max-width: 800px;
+    padding: 20px;
+    background: rgba(18, 18, 18, 0.5);
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 48px;
+    color: #00ffff;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #cccccc;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .action-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .action-button {
+    background: linear-gradient(135deg, #00ffff, #ff00ff);
+    color: #ffffff;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-family: 'Roboto Mono', monospace;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .action-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 8px 25px rgba(0, 255, 255, 0.5);
+  }
+
+  /* Background Canvas Style */
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="active">Home</a>
+  <a href="resources.html">Resources</a>
+  <a href="countdowns.html">Countdowns</a>
+  <a href="season-code.html">Season Code</a>
+</nav>
+
+<div class="welcome-box">
+  <h1>Welcome to The Hi Fives Programming Team Website</h1>
+  <p>This website is dedicated to helping students by offering programming resources.</p>
+  <div class="action-buttons">
+    <a href="resources.html" class="action-button">Explore Resources</a>
+    <a href="season-code.html" class="action-button">View Hi Fives Code</a>
+  </div>
+</div>
+
+<canvas id="background-canvas"></canvas>
+
+<script>
+  const canvas = document.getElementById('background-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const shapes = [];
+
+  class Shape {
+    constructor(x, y, type, size, color) {
+      this.x = x;
+      this.y = y;
+      this.type = type;
+      this.size = size;
+      this.color = color;
+      this.opacity = 1.0;
+    }
+
+    grow() {
+      this.size += 0.5;
+      this.opacity -= 0.003;
+    }
+
+    draw() {
+      ctx.lineWidth = 12;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 5;
+      ctx.shadowOffsetY = 5;
+      ctx.strokeStyle = this.color;
+      ctx.globalAlpha = this.opacity;
+
+      if (this.type === 'circle') {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (this.type === 'square') {
+        const half = this.size / 2;
+        ctx.beginPath();
+        ctx.rect(this.x - half, this.y - half, this.size, this.size);
+        ctx.stroke();
+      } else if (this.type === 'triangle') {
+        const half = this.size / 2;
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y - half);
+        ctx.lineTo(this.x - half, this.y + half);
+        ctx.lineTo(this.x + half, this.y + half);
+        ctx.closePath();
+        ctx.stroke();
+      }
+    }
+  }
+
+  function spawnShape() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const type = ['circle', 'square', 'triangle'][Math.floor(Math.random() * 3)];
+    const color = {
+      circle: '#FFFFFF',
+      square: '#0055FF',
+      triangle: '#FF0000'
+    }[type];
+
+    shapes.push(new Shape(x, y, type, 50, color));
+  }
+
+  function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = shapes.length - 1; i >= 0; i--) {
+      shapes[i].grow();
+      shapes[i].draw();
+
+      if (shapes[i].size > 300 || shapes[i].opacity <= 0) {
+        shapes.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  setInterval(spawnShape, 700);
+  update();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>
